@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os 
 import threading
+import time
 import win32api
 import win32gui
 import win32con
+
 
 class Test1(threading.Thread):
 
@@ -34,25 +36,33 @@ class Test2(threading.Thread):
         
     
     def run(self):
+
+        #delay 
+        time.sleep(3)
+        
         # """
         # 记事本实例
         # """
         #获取实例
         notepadHhandle = win32gui.FindWindow("Notepad", None)
+        # notepadHhandle = win32gui.FindWindow(None,"text1.txt")
         print ("记事本实例 %x" % (notepadHhandle))
 
         #获取句柄
         editHandle = find_subHandle(notepadHhandle, [("Edit",0)])
-        print ("%x" % (editHandle))
+        print ("句柄 %x" % (editHandle))
 
         """修改edit中的值"""
-        win32api.SendMessage(editHandle, win32con.WM_SETTEXT, 0, "666666")
+        win32api.SendMessage(editHandle, win32con.WM_SETTEXT, 0, "测试1")
         
         command_dict = {  # [目录的编号, 打开的窗口名]  
-                    "open": [3, u"打开"]
+                    "open": [3, u"打开"],
+                    "save": [4, u"保存"],
+                    
                 }  
         
         """操作菜单"""
+
         menu = win32gui.GetMenu(notepadHhandle)
         menu = win32gui.GetSubMenu(menu, 0)  
         cmd_ID = win32gui.GetMenuItemID(menu, command_dict["open"][0])
